@@ -5,10 +5,11 @@
   ];
   biene =
     {
-      monitoring = {
+      services.monitoring = {
         grafana = {
           enable = true;
-          host = "monitoring.loco.vision";
+          domain = "monitoring.loco.vision";
+          acmeMail = "huettel.m@gmail.com";
         };
       };
     };

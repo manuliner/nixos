@@ -18,12 +18,18 @@ in
       example = 3000;
       description = "Port for grafana";
     };
+    acmeMail = mkOption {
+      type = types.str;
+      default = null;
+      example = "admin@pretix.eu";
+      description = "Email for SSL Certificate Renewal";
+    };
   };
 
   config = mkIf cfg.enable {
 
     # Backup Graphana dir, contains stateful config
-    biene.services.backup.backupDirs = [ "/var/lib/grafana" ];
+    #biene.services.backup.backupDirs = [ "/var/lib/grafana" ];
 
     # Graphana frontend
     services.grafana = {
@@ -46,39 +52,45 @@ in
         # fromAddress = "status@pablo.tools";
         # };
       };
-
-      # nginx reverse proxy
-      services.nginx = {
-        enable = true;
-        recommendedProxySettings = true;
-        recommendedTlsSettings = true;
-        virtualHosts."${cfg.domain}" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/".proxyWebsockets = true;
-          locations."/".proxyPass = "http://127.0.0.1:${toString cfg.port}";
-        };
-      };
-      #
-      #      provision.datasources.settings =
-      #        {
-      #          datasources =
-      #            [
-      #              {
-      #                name = "Prometheus localhost";
-      #                url = "http://localhost:9090";
-      #                type = "prometheus";
-      #                isDefault = true;
-      #              }
-      #              {
-      #                name = "loki";
-      #                url = "http://localhost:3100";
-      #                type = "loki";
-      #              }
-      #            ];
-      #
-      #        };
-      #
     };
+    security.acme = {
+      acceptTerms = true;
+      defaults.email = "${cfg.acmeMail}";
+    };
+
+
+    # nginx reverse proxy
+    services.nginx = {
+      enable = true;
+      recommendedProxySettings = true;
+      recommendedTlsSettings = true;
+      virtualHosts."${cfg.domain}" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/".proxyWebsockets = true;
+        locations."/".proxyPass = "http://127.0.0.1:${toString cfg.port}";
+      };
+    };
+    #
+    #      provision.datasources.settings =
+    #        {
+    #          datasources =
+    #            [
+    #              {
+    #                name = "Prometheus localhost";
+    #                url = "http://localhost:9090";
+    #                type = "prometheus";
+    #                isDefault = true;
+    #              }
+    #              {
+    #                name = "loki";
+    #                url = "http://localhost:3100";
+    #                type = "loki";
+    #              }
+    #            ];
+    #
+    #        };
+    #
   };
 }
+
