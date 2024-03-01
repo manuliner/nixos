@@ -1,10 +1,10 @@
 { lib, config, ... }:
 with lib;
-let cfg = config.zugvoegel.services.monitoring.prometheus;
+let cfg = config.biene.services.monitoring.prometheus;
 in
 {
 
-  options.zugvoegel.services.monitoring.prometheus = {
+  options.biene.services.monitoring.prometheus = {
     enable = mkEnableOption "prometheus";
     port = mkOption {
       type = types.int;

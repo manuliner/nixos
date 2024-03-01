@@ -1,12 +1,12 @@
 { lib, config, ... }:
 with lib;
 let
-  cfg = config.zugvoegel.services.monitoring.loki;
+  cfg = config.biene.services.monitoring.loki;
 
 in
 {
 
-  options.zugvoegel.services.monitoring.loki = {
+  options.biene.services.monitoring.loki = {
     enable = mkEnableOption "loki log collector";
     port = mkOption {
       type = types.int;

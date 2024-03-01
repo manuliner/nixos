@@ -1,11 +1,11 @@
 { lib, config, ... }:
 with lib;
 let
-  cfg = config.zugvoegel.services.monitoring.promtail;
+  cfg = config.biene.services.monitoring.promtail;
 in
 {
 
-  options.zugvoegel.services.monitoring.promtail = {
+  options.biene.services.monitoring.promtail = {
     enable = mkEnableOption "promtail log sender";
   };
 
@@ -22,7 +22,7 @@ in
         positions = { filename = "/tmp/positions.yml"; };
 
         clients = [{
-          url = "http://localhost:${toString config.zugvoegel.services.monitoring.loki.port}/loki/api/v1/push";
+          url = "http://localhost:${toString config.biene.services.monitoring.loki.port}/loki/api/v1/push";
         }];
 
         scrape_configs = [{

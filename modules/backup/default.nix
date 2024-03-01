@@ -1,22 +1,22 @@
 { lib, pkgs, config, ... }:
 with lib;
-let cfg = config.zugvoegel.services.backup;
+let cfg = config.biene.services.backup;
 in
 {
-  options.zugvoegel.services.backup = {
+  options.biene.services.backup = {
     enable = mkEnableOption "restic backups";
 
     backupDirs = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "/home/zugvoegel/Notes" ];
+      example = [ "/home/biene/Notes" ];
       description = "Paths to backup to offsite storage";
     };
 
     backup-paths-exclude = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = [ "/home/zugvoegel/cache" ];
+      example = [ "/home/biene/cache" ];
       description = "Paths to exclude from backup";
     };
   };
@@ -40,7 +40,7 @@ in
       {
         s3-offsite = {
           paths = cfg.backupDirs;
-          repository = " s3:https://s3.us-west-004.backblazeb2.com/zugvoegelticketingbkp ";
+          repository = " s3:https://s3.us-west-004.backblazeb2.com/bieneticketingbkp ";
           environmentFile = config.sops.secrets.backup-envfile.path;
           passwordFile = config.sops.secrets.backup-passwordfile.path;
           backupPrepareCommand = '' ${pkgs.postgresql}/bin/pg_dumpall -U postgres -h postgresql > "$(date + "%Y-%m-%d").sql " '';

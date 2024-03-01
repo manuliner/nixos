@@ -1,20 +1,14 @@
 { lib, config, ... }:
 with lib;
 let
-  cfg = config.zugvoegel.services.monitoring.grafana;
+  cfg = config.biene.services.monitoring.grafana;
 in
 {
-
-  # [porree:rebuild] trace: warning: Provisioning Grafana datasources with options has been deprecated.
-  # [porree:rebuild] Use `services.grafana.provision.datasources.settings` or
-  # [porree:rebuild] `services.grafana.provision.datasources.path` instead.
-
-  options.zugvoegel.services.monitoring.grafana = {
+  options.biene.services.monitoring.grafana = {
     enable = mkEnableOption "Grafana";
 
     domain = mkOption {
       type = types.str;
-      default = "status.zugvoegelfestival.org";
       example = "grafana.myhost.com";
       description = "Domain for grafana";
     };
@@ -29,7 +23,7 @@ in
   config = mkIf cfg.enable {
 
     # Backup Graphana dir, contains stateful config
-    zugvoegel.services.backup.backupDirs = [ "/var/lib/grafana" ];
+    biene.services.backup.backupDirs = [ "/var/lib/grafana" ];
 
     # Graphana frontend
     services.grafana = {
