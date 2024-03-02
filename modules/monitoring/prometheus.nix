@@ -12,13 +12,9 @@ in
       example = 9001;
       description = "Port for prometheus";
     };
-    port-exporter = mkOption {
-      type = types.int;
-      default = 3000;
-      example = 3000;
-      description = "Port for prometheus exporter";
-    };
-    config = mkIf cfg.enable {
+  };
+  config = mkIf cfg.enable
+    {
 
       services.prometheus = {
         enable = true;
@@ -28,23 +24,28 @@ in
         # https://github.com/NixOS/nixpkgs/blob/d89d7af1ba23bd8a5341d00bdd862e8e9a808f56/nixos/modules/services/monitoring/prometheus/default.nix#L1732-L1738
         checkConfig = false;
 
-        exporters = {
-          node = {
-            enable = true;
-            enabledCollectors = [ "systemd" ];
-            port = cfg.port-exporter;
-          };
-        };
-
+        extraFlags =
+          [ "--log.level=debug" "--storage.tsdb.retention.size='6GB'" ];
         scrapeConfigs = [
           {
-            job_name = "PrometheusExporter";
+            job_name = "pretix-app-stats";
             static_configs = [{
-              targets = [ "127.0.0.1:${toString cfg.port-exporter}" ];
+              targets = [ "tickets.zugvoegelfestival.org" ];
+            }];
+            basic_auth =
+              {
+                username = "user";
+                password = "password";
+              };
+          }
+          {
+            job_name = "pretix-server-stats";
+            static_configs = [{
+              targets = [ "status.loco.vision" ];
             }];
           }
         ];
       };
     };
-  };
 }
+

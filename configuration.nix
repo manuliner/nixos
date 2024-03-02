@@ -11,6 +11,9 @@
           domain = "monitoring.loco.vision";
           acmeMail = "huettel.m@gmail.com";
         };
+        prometheus = {
+          enable = true;
+        };
       };
     };
 
@@ -27,7 +30,7 @@
   networking = {
     firewall.enable = true;
     firewall.interfaces.eth0.allowedTCPPorts = [ 80 443 ];
-    hostName = "bienen";
+    hostName = "biene";
     interfaces.eth0.useDHCP = true;
   };
 
